@@ -3,19 +3,30 @@ package com.ptms.app.model;
 import java.time.LocalDateTime;
 
 public class ProjectMembers {
+
     private int id;
     private int projectId;
     private int employeeId;
     private LocalDateTime joinedAt;
-    private ProjectMembers(){
 
+    public ProjectMembers() {
     }
 
-    public ProjectMembers(int id, int projectId, int employeeId, LocalDateTime joinedAt) {
+    public ProjectMembers(
+            int id,
+            int projectId,
+            int employeeId,
+            LocalDateTime joinedAt) {
+
         this.id = id;
         this.projectId = projectId;
         this.employeeId = employeeId;
         this.joinedAt = joinedAt;
+    }
+
+    public ProjectMembers(int projectId, int employeeId) {
+        this.projectId = projectId;
+        this.employeeId = employeeId;
     }
 
     public int getId() {

@@ -3,6 +3,7 @@ package com.ptms.app.model;
 import java.time.LocalDate;
 
 public class Projects {
+
     private int id;
     private String name;
     private String description;
@@ -11,11 +12,34 @@ public class Projects {
     private String status;
     private int createdBy;
 
-    private Projects(){
-
+    public Projects() {
     }
 
-    public Projects(int id, String name, String description, LocalDate startDate, LocalDate endDate, String status, int createdBy) {
+    public Projects(
+            String name,
+            String description,
+            LocalDate startDate,
+            LocalDate endDate,
+            String status,
+            int createdBy) {
+
+        this.name = name;
+        this.description = description;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.status = status;
+        this.createdBy = createdBy;
+    }
+
+    public Projects(
+            int id,
+            String name,
+            String description,
+            LocalDate startDate,
+            LocalDate endDate,
+            String status,
+            int createdBy) {
+
         this.id = id;
         this.name = name;
         this.description = description;
@@ -83,7 +107,7 @@ public class Projects {
 
     @Override
     public String toString() {
-        return "Projects{" +
+        return "Project{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +

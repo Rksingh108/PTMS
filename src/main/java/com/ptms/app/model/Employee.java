@@ -1,19 +1,28 @@
 package com.ptms.app.model;
 
 public class Employee {
+
     private int id;
     private int userId;
     private String designation;
     private String department;
-    private Employee(){
 
+    public Employee() {
     }
+
+    public Employee(int userId, String designation, String department) {
+        this.userId = userId;
+        this.designation = designation;
+        this.department = department;
+    }
+
     public Employee(int id, int userId, String designation, String department) {
         this.id = id;
         this.userId = userId;
         this.designation = designation;
         this.department = department;
     }
+
     public int getId() {
         return id;
     }

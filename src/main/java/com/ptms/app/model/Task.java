@@ -16,11 +16,26 @@ public class Task {
     private LocalTime startTime;
     private LocalTime endTime;
 
-    private Task(){
-
+    public Task() {
     }
 
-    public Task(int id, int projectId, int assignedTo, String title, String description, String status, String priority, LocalDate dueDate, LocalTime startTime, LocalTime endTime) {
+    public Task(int projectId,int assignedTo,String title,String description,String status,
+                String priority,LocalDate dueDate,LocalTime startTime,LocalTime endTime) {
+
+        this.projectId = projectId;
+        this.assignedTo = assignedTo;
+        this.title = title;
+        this.description = description;
+        this.status = status;
+        this.priority = priority;
+        this.dueDate = dueDate;
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
+
+    public Task(int id, int projectId, int assignedTo, String title, String description, String status,
+                String priority, LocalDate dueDate, LocalTime startTime, LocalTime endTime) {
+
         this.id = id;
         this.projectId = projectId;
         this.assignedTo = assignedTo;
