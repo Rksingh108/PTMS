@@ -40,4 +40,20 @@ public class Roles {
                 ", name='" + name + '\'' +
                 '}';
     }
+
+    public String getRoleName() {
+            return null;
+    }
+
+    public String getRoleDescription() {
+        return null;
+    }
+
+    public void setRoleName(String roleName) {
+
+    }
+
+    public void setRoleDescription(String roleDescription) {
+
+    }
 }

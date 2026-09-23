@@ -63,4 +63,8 @@ public class User {
                 ", roleId=" + roleId +
                 '}';
     }
+
+    public String getEmail() {
+            return null;
+    }
 }
