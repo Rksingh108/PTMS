@@ -1,4 +1,4 @@
 package com.ptms.app.controller;
 
-public class DummyOne {
+public class UserController {
 }

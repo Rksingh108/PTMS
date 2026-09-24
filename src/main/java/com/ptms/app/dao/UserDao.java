@@ -1,6 +1,5 @@
 package com.ptms.app.dao;
 
-import com.ptms.app.model.Roles;
 import com.ptms.app.model.User;
 import com.ptms.app.util.DataBaseConnection;
 
@@ -13,49 +12,55 @@ public class UserDao implements IUserDao {
     @Override
     public void addUser(User user) {
 
-        String sql = """
-                INSERT INTO users
-                (username, password, email, role_id)
-                VALUES (?, ?, ?, ?)
-                """;
+        String sql = "INSERT INTO users (username, password, role_id) VALUES (?, ?, ?) ";
 
         try (Connection connection = DataBaseConnection.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
+             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+                statement.setString(1, user.getUsername());
+                statement.setString(2, user.getPassword());
+                statement.setInt(3, user.getRoleId());
 
-            ps.setString(1, user.getUsername());
-            ps.setString(2, user.getPassword());
-            ps.setString(3, user.getEmail());
-            ps.setInt(4, user.getRoleId());
+                int rows = statement.executeUpdate();
 
-            ps.executeUpdate();
+                if (rows > 0) {
 
-        } catch (SQLException e) {
-            throw new RuntimeException("Error adding user", e);
-        }
+                    try (ResultSet resultSet = statement.getGeneratedKeys()) {
+
+                        if (resultSet.next()) {
+                            user.setId(resultSet.getInt(1));
+                        }
+                    }
+
+                    System.out.println("User added successfully.");
+
+                } else {
+                    System.out.println("User was not added.");
+                }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
     }
 
     @Override
     public User getUserById(int id) {
 
-        String sql = """
-                SELECT id, username, password, email, role_id
-                FROM users
-                WHERE id = ?
-                """;
+        String sql = "SELECT id, username, password, role_id FROM users WHERE id = ? ";
 
         try (Connection connection = DataBaseConnection.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
+             PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            ps.setInt(1, id);
+            statement.setInt(1, id);
 
-            ResultSet rs = ps.executeQuery();
+            try (ResultSet resultSet = statement.executeQuery()) {
 
-            if (rs.next()) {
-                return mapUser(rs);
+                if (resultSet.next()) {
+                    return mapUser(resultSet);
+                }
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException("Error finding user", e);
+            e.printStackTrace();
         }
 
         return null;
@@ -64,25 +69,22 @@ public class UserDao implements IUserDao {
     @Override
     public User getUserByUsername(String username) {
 
-        String sql = """
-                SELECT id, username, password, email, role_id
-                FROM users
-                WHERE username = ?
-                """;
+        String sql = "SELECT id, username, password, role_id FROM users WHERE username = ? ";
 
         try (Connection connection = DataBaseConnection.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
+             PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            ps.setString(1, username);
+            statement.setString(1, username);
 
-            ResultSet rs = ps.executeQuery();
+            try (ResultSet resultSet = statement.executeQuery()) {
 
-            if (rs.next()) {
-                return mapUser(rs);
+                if (resultSet.next()) {
+                    return mapUser(resultSet);
+                }
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException("Error finding user", e);
+            e.printStackTrace();
         }
 
         return null;
@@ -93,21 +95,18 @@ public class UserDao implements IUserDao {
 
         List<User> users = new ArrayList<>();
 
-        String sql = """
-                SELECT id, username, password, email, role_id
-                FROM users
-                """;
+        String sql = "SELECT id, username, password, role_id FROM users ORDER BY id ";
 
         try (Connection connection = DataBaseConnection.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+             PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet resultSet = statement.executeQuery()) {
 
-            while (rs.next()) {
-                users.add(mapUser(rs));
+            while (resultSet.next()) {
+                users.add(mapUser(resultSet));
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException("Error fetching users", e);
+            e.printStackTrace();
         }
 
         return users;
@@ -116,71 +115,61 @@ public class UserDao implements IUserDao {
     @Override
     public void updateUser(User user) {
 
-        String sql = """
-                UPDATE users
-                SET username = ?,
-                    password = ?,
-                    email = ?,
-                    role_id = ?
-                WHERE id = ?
-                """;
+        String sql = "UPDATE users SET username = ?, password = ?, role_id = ? WHERE id = ? ";
 
         try (Connection connection = DataBaseConnection.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
+             PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            ps.setString(1, user.getUsername());
-            ps.setString(2, user.getPassword());
-            ps.setString(3, user.getEmail());
-            ps.setInt(4, user.getRoleId());
-            ps.setInt(5, user.getId());
+            statement.setString(1, user.getUsername());
+            statement.setString(2, user.getPassword());
+            statement.setInt(3, user.getRoleId());
+            statement.setInt(4, user.getId());
 
-            ps.executeUpdate();
+            int rows = statement.executeUpdate();
+
+            if (rows > 0) {
+                System.out.println("User updated successfully.");
+            } else {
+                System.out.println("User not found.");
+            }
 
         } catch (SQLException e) {
-            throw new RuntimeException("Error updating user", e);
+            e.printStackTrace();
         }
     }
 
     @Override
     public void deleteUser(int id) {
 
-        String sql = """
-                DELETE FROM users
-                WHERE id = ?
-                """;
+        String sql = "DELETE FROM users WHERE id = ? ";
 
         try (Connection connection = DataBaseConnection.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
+             PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            ps.setInt(1, id);
+            statement.setInt(1, id);
 
-            ps.executeUpdate();
+            int rows = statement.executeUpdate();
+
+            if (rows > 0) {
+                System.out.println("User deleted successfully.");
+            } else {
+                System.out.println("User not found.");
+            }
 
         } catch (SQLException e) {
-            throw new RuntimeException("Error deleting user", e);
+            e.printStackTrace();
         }
     }
 
-    @Override
-    public Roles getRoleById(int id) {
-        return null;
-    }
-
-    // Converts ResultSet into User object
-    private User mapUser(ResultSet rs) throws SQLException {
+    private User mapUser(ResultSet resultSet) throws SQLException {
 
         User user = new User();
 
-        user.setId(rs.getInt("id"));
-        user.setUsername(rs.getString("username"));
-        user.setPassword(rs.getString("password"));
-//        user.setEmail(rs.getString("email"));
-        user.setRoleId(rs.getInt("role_id"));
+        user.setId(resultSet.getInt("id"));
+        user.setUsername(resultSet.getString("username"));
+        user.setPassword(resultSet.getString("password"));
+        user.setRoleId(resultSet.getInt("role_id"));
 
         return user;
-    }
-
-    static void main(String[] args) {
-
     }
 }

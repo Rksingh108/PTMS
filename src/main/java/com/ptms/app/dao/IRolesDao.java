@@ -6,6 +6,4 @@ import java.util.List;
 
 public interface IRolesDao {
     void addRole(Roles role);
-
-
 }

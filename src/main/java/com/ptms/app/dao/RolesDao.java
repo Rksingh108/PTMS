@@ -12,10 +12,7 @@ public class RolesDao implements IRolesDao {
     @Override
     public void addRole(Roles role) {
 
-        String sql = """
-                INSERT INTO roles (role_name)
-                VALUES (?)
-                """;
+        String sql = " INSERT INTO roles (role_name) VALUES (?) ";
 
         try (Connection conn = DataBaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -31,18 +28,5 @@ public class RolesDao implements IRolesDao {
             throw new RuntimeException("Failed to insert role", e);
         }
     }
-
-    public static void main(String[] args) {
-
-        RolesDao dao = new RolesDao();
-
-        Roles role = new Roles(
-
-                "Employee"
-        );
-
-        dao.addRole(role);
-    }
-
 
 }
